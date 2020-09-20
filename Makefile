@@ -1,7 +1,10 @@
 objects := $(addsuffix .o,$(basename $(wildcard *.c)))
-.PHONY: all
+.PHONY: all clean
 
 all: $(objects)
 
 %.o: %.c
-	gcc -o $@ $<
+	gcc -ggdb -o $@ $<
+
+clean:
+	rm *.o
