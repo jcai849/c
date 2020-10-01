@@ -2,34 +2,34 @@
 
 #define N	8	/* tab column space */
 
-void putws(int nspaces, int replace);
+void putws(int nspaces, int entab);
 
 int main()
 {
 	int c, nspaces;
-	int l;		/* line position */
-	int state;
+	int lpos;		/* line position */
 
 	nspaces = 0;
-	for (l = 0; (c=getchar())!=EOF && l>=0; ++l) {
-		if ((l % N) == N-1) { /* at tab column */
-			putws(nspaces, 1);
-			nspaces = 0;
-		} else if (c == ' ')
-			nspaces += 1;
+	for (lpos=1; (c=getchar())!=EOF; ++lpos) {
 		if (c != ' ') {
 			putws(nspaces, 0);
 			nspaces = 0;
 			putchar(c);
+		} else {
+			nspaces += 1;
+			if ((lpos % N) == 0) { /* at a tab column */
+				putws(nspaces, 1);
+				nspaces = 0;
+			} 
 		}
 		if (c == '\n')
-			l = -1;
+			lpos = 0;
 	}
 }
 
-void putws(int nspaces, int replace)
+void putws(int nspaces, int entab)
 {
-	if (!replace)
+	if (!entab || nspaces == 1)
 		for (nspaces; nspaces > 0; --nspaces)
 			putchar(' ');
 	else if (nspaces > 0) putchar('\t');
