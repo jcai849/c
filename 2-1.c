@@ -12,7 +12,7 @@ int main()
 	printf("int range: %d - %d\n", INT_MIN, INT_MAX);
 	printf("unsigned int range: %d - %u\n", 0, UINT_MAX);
 	/* The following don't look right; probably due to long/int issues */
-	printf("long range: %d - %d\n", LONG_MIN, LONG_MAX);
-	printf("unsigned long range: %d - %u\n", 0, ULONG_MAX);
+	printf("long range: %ld - %ld\n", LONG_MIN, LONG_MAX);
+	printf("unsigned long range: %ld - %lu\n", 0, ULONG_MAX);
 
 }
