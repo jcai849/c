@@ -11,7 +11,7 @@ void reverse(char s[]);
 int main()
 {
 	char s[LIM];
-	itob(INT_MIN, s, 16);
+	itob(1000000000, s, 26);
 	printf("%s", s);
 	return 0;
 }
