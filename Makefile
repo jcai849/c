@@ -4,7 +4,7 @@ objects := $(addsuffix .o,$(basename $(wildcard *.c)))
 all: $(objects)
 
 %.o: %.c
-	gcc -ggdb -o $@ $<
+	gcc -o $@ $< -lm
 
 clean:
 	rm *.o
