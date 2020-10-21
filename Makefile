@@ -1,10 +1,11 @@
-objects := $(addsuffix .o,$(basename $(wildcard *.c)))
+CC = gcc
+CFLAGS = -Wall -g
+LDLIBS = -lm
+
+progs := $(basename $(wildcard *.c))
 .PHONY: all clean
 
-all: $(objects)
-
-%.o: %.c
-	gcc -o $@ $< -lm
+all: $(progs)
 
 clean:
-	rm *.o
+	$(RM) *.o

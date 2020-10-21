@@ -1,10 +1,13 @@
-objects = main.o stack.o getop.o getch.o
-
-rpn: $(objects)
-	cc -o rpn $(objects) -lm
-
-$(objects): calc.h
+CC = gcc
+CFLAGS = -Wall -g
+LDLIBS = -lm
 
 .PHONY: clean
+
+rpn: main
+	mv main rpn
+
+main: $(addsuffix .o, $(basename $(wildcard *.c)))
+
 clean:
-	-rm rpn $(objects)
+	$(RM) rpn *.o
