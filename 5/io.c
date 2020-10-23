@@ -3,20 +3,18 @@
 
 #include "sort.h"
 
-#define MAXLEN 1000
-
-char *alloc(int);
 int getLine(char *s, int lim);
 
-int readlines(char *lineptr[], int maxlines)
+int readlines(char *lineptr[], int maxlines, char *s)
 {
 	int len, nlines;
 	char *p, line[MAXLEN];
 
 	nlines = 0;
 	while ((len = getLine(line, MAXLEN)) > 0)
-		if (nlines >= maxlines || (p = alloc(len)) == NULL)
+		if (nlines >= maxlines || (p = (s+=len)) == NULL) {
 			return -1;
+		}
 		else {
 			line[len-1] = '\0';
 			strcpy(p, line);
