@@ -233,7 +233,7 @@ int getop(char s[])
 	s[1] = '\0';
 	if (islower(c))
 		return s[0];
-	if (!isdigit(c) && c != '.' || c == '-' || c == '+') {
+	if ((!isdigit(c) && c != '.') || c == '-' || c == '+') {
 		if (c == '-' || c == '+') {
 			d = getch(); /* peek at the next char */
 			ungetch(d);
