@@ -23,9 +23,8 @@ struct key {
 	{ "while", 0 }
 };
 
-int getword(char *, int);
+int gettoken(char *, int);
 int binsearch(char *, struct key *, int);
-
 
 /* count C keywords */
 int main()
@@ -33,10 +32,9 @@ int main()
 	int n;
 	char word[MAXWORD];
 
-	while (getword(word, MAXWORD) != EOF)
-		if (isalpha(word[0]))
-			if ((n = binsearch(word, keytab, NKEYS)) >= 0)
-				keytab[n].count++;
+	while (gettoken(word, MAXWORD) != EOF)
+		if ((n = binsearch(word, keytab, NKEYS)) >= 0)
+			keytab[n].count++;
 	for (n = 0; n < NKEYS; n++)
 		if (keytab[n].count > 0)
 			printf("%4d %s\n",
@@ -63,7 +61,7 @@ int binsearch(char *word, struct key tab[], int n)
 	return -1;
 }
 
-int getword(char *word, int lim)
+int gettoken(char *word, int lim)
 {
 	int c, getch(void);
 	void ungetch(int);
@@ -73,6 +71,35 @@ int getword(char *word, int lim)
 		;
 	if (c != EOF)
 		*w++ = c;
+	switch (c) {
+		case '\'':
+			*w++ = '\'';
+			while ((c = getch()) != '\'') ;
+			break;
+		case '#':
+			*w++ = '#';
+			while (!isspace(c = getch())) ;
+			break;
+		case '/':
+			if ((c = getch()) == '*') {
+				*w++ = '/';
+				*w++ = '*';
+				while ((c = getch()) != EOF) 
+					if (c == '*') {
+						if ((c = getch()) == '/')
+							break;
+						else ungetch(c);
+					}
+				break;
+			} else ungetch(c);
+		default:
+			for ( ; 
+					--lim > 0 && !isspace(*w = getch()) && 
+					*w != ';' && 
+					*w  != '(' &&
+					*w != '[';
+					w++)
+
 	if (!isalpha(c)) {
 		*w = '\0';
 		return c;
