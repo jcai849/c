@@ -24,15 +24,9 @@ struct key {
 	{ "while", 0 }
 };
 
-struct token {
-	char *token;
-	char *type;
-};
-
-struct token gettoken(struct token *, int);
+int gettoken(char *, int);
 int binsearch(char *, struct key *, int);
 int isvalid(char firstletter);
-
 
 /* count C keywords */
 int main()
@@ -41,12 +35,9 @@ int main()
 	char word[MAXWORD];
 	struct token token = { word, "NULL" };
 
-	while (gettoken(&token, MAXWORD).token[0] != EOF) {
-		;
-		if (isalpha(word[0]))
-			if ((n = binsearch(word, keytab, NKEYS)) >= 0)
-				keytab[n].count++;
-	}
+	while (gettoken(word, MAXWORD) != EOF)
+		if ((n = binsearch(word, keytab, NKEYS)) >= 0)
+			keytab[n].count++;
 	for (n = 0; n < NKEYS; n++)
 		if (keytab[n].count > 0)
 			printf("%4d %s\n",
@@ -73,7 +64,7 @@ int binsearch(char *word, struct key tab[], int n)
 	return -1;
 }
 
-struct token gettoken(struct token *t, int lim)
+int gettoken(char *word, int lim)
 {
 	int c, getch(void);
 	void ungetch(int);
@@ -83,6 +74,35 @@ struct token gettoken(struct token *t, int lim)
 		;
 	if (c != EOF)
 		*w++ = c;
+	switch (c) {
+		case '\'':
+			*w++ = '\'';
+			while ((c = getch()) != '\'') ;
+			break;
+		case '#':
+			*w++ = '#';
+			while (!isspace(c = getch())) ;
+			break;
+		case '/':
+			if ((c = getch()) == '*') {
+				*w++ = '/';
+				*w++ = '*';
+				while ((c = getch()) != EOF) 
+					if (c == '*') {
+						if ((c = getch()) == '/')
+							break;
+						else ungetch(c);
+					}
+				break;
+			} else ungetch(c);
+		default:
+			for ( ; 
+					--lim > 0 && !isspace(*w = getch()) && 
+					*w != ';' && 
+					*w  != '(' &&
+					*w != '[';
+					w++)
+
 	if (!isalpha(c)) {
 		*w = '\0';
 		return *t;
