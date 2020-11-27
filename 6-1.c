@@ -27,13 +27,14 @@ struct key {
 int gettoken(char *, int);
 int binsearch(char *, struct key *, int);
 int isvalid(char firstletter);
+int getch(void);
+void ungetch(int c);
 
 /* count C keywords */
 int main()
 {
 	int n;
 	char word[MAXWORD];
-	struct token token = { word, "NULL" };
 
 	while (gettoken(word, MAXWORD) != EOF)
 		if ((n = binsearch(word, keytab, NKEYS)) >= 0)
@@ -66,8 +67,7 @@ int binsearch(char *word, struct key tab[], int n)
 
 int gettoken(char *word, int lim)
 {
-	int c, getch(void);
-	void ungetch(int);
+	int c;
 	char *w = word;
 
 	while (isspace(c = getch()))
@@ -102,10 +102,11 @@ int gettoken(char *word, int lim)
 					*w  != '(' &&
 					*w != '[';
 					w++)
-
+				;
+	}
 	if (!isalpha(c)) {
 		*w = '\0';
-		return *t;
+		return word[0];
 	}
 	for ( ; --lim > 0; w++)
 		if (!isalnum(*w = getch())) {
@@ -113,13 +114,9 @@ int gettoken(char *word, int lim)
 			break;
 		}
 	*w = '\0';
-	return *t;
+	return word[0];
 }
 
-int isvalid(char firstletter)
-{
-	return isalpha(firstletter) || firstletter == '#';
-}
 
 #define BUFSIZE	100
 
