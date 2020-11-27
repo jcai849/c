@@ -42,10 +42,10 @@ struct tnode *addtree(struct tnode *p, char *w, int linenum)
 		p->count = 1;
 		p->line[0] = linenum;
 		p->left = p->right = NULL;
-	} else if ((cond = strcmp(w, p->word)) == 0) {
+	} else if ((cond = strcmp(w, p->word)) == 0 &&
+			p->count < MAXLINES) {
 		p->count++;
-		if (p->count <= MAXLINES)
-			p->line[p->count-1] = linenum;
+		p->line[p->count-1] = linenum;
 	}
 	else if (cond < 0)
 		p->left = addtree(p->left, w, linenum);
@@ -58,9 +58,10 @@ void treeprint(struct tnode *p)
 {
 	if (p != NULL) {
 		treeprint(p->left);
+		printf("%s", p->word);
 		while (--p->count >= 0)
 			printf("%4d ", p->line[p->count]);
-		printf("%s\n", p->word);
+		printf("\n");
 		treeprint(p->right);
 	}
 }
